@@ -4,15 +4,17 @@ This script will collect the PODs' resources consumption and display them by nod
 
 ### Usage
 ```
-ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...] [-d {0-10}]
+ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...] [-d {0-10}] [-v|-h]
   -c: sort by CPU (default)
   -m: sort by Memory
   -p: sort by namespace/pod
   -L: retrieve node(s) matching all labels
   -H: retrieve node(s) by hostname
   -A: retrieve All nodes (default)
-  -d: debug/loglevel mode. Provide additional `oc --loglevel` ouput. (Recommended value: 6)
+  -d: debug/loglevel mode. Provide additional  ouput. (Recommended value: 6)
+  -v: Display the version
   -h: Display this help
+ocadmtop_node.sh - Version: 0.2
 ```
 
 ### Examples
