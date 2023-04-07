@@ -14,7 +14,7 @@ echo "$(basename $0) [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,
   -L: retrieve node(s) matching all labels
   -H: retrieve node(s) by hostname
   -A: retrieve All nodes (default)
-  -d: debug/loglevel mode. Provide additional `oc --loglevel` ouput. (Recommended value: 6)
+  -d: debug/loglevel mode. Provide additional 'oc --loglevel' ouput. (Recommended value: 6)
   -v: Display the version
   -h: Display this help"
 fct_version
@@ -41,9 +41,9 @@ fct_pod() {
 }
 
 #### MAIN
-VERSION=0.2
+VERSION=0.3
 {
-while getopts "cd:mpL:H:Av" option;do
+while getopts "cd:mpL:H:Avh" option;do
   case ${option} in
     d) if [[ ${OPTARG} =~ ^[1-9]$ ]] || [[ ${OPTARG} == 10 ]]; then LOGLEVEL="--loglevel ${OPTARG:-6}"; else fct_usage; fi ;;
     c|m|p) SORT=${option} ;;
@@ -51,7 +51,7 @@ while getopts "cd:mpL:H:Av" option;do
     L) NODE_OPT=L && NODE_ARG=${OPTARG} ;;
     A) NODE_OPT=A ;;
     v) fct_version ;;
-    *) fct_usage ;;
+    h|*) fct_usage ;;
   esac
 done
 
