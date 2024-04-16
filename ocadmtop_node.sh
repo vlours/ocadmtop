@@ -3,7 +3,7 @@
 # Owner       # Red Hat - CEE
 # Name        # ocadmtop_node.sh
 # Description # Script to display detailed POD CPU/MEM usage on node
-# @VERSION    # 0.4
+# @VERSION    # 0.5
 ########################################################################
 
 #### Functions
@@ -47,7 +47,6 @@ fct_pod() {
 }
 
 #### MAIN
-VERSION=0.4
 {
 while getopts "cmpL:H:Ad:t:vh" option;do
   case ${option} in
