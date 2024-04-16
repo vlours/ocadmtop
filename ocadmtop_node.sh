@@ -33,17 +33,17 @@ fct_version() {
 
 fct_cpu() {
   echo "CPU|MEM|namespace/pod"
-  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){print $3"|"$4"|"$1"/"$2}}'; done | sort -rn
+  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){printf "%dm|%dMi|%s\n",$3,$4,$1"/"$2}}'; done | sort -rn
 }
 
 fct_mem() {
   echo "MEM|CPU|namespace/pod"
-  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){print $4"|"$3"|"$1"/"$2}}'; done | sort -rn
+  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){printf "%dMi|%dm|%s\n",$4,$3,$1"/"$2}}'; done | sort -rn
 }
 
 fct_pod() {
   echo "namespace/pod|CPU|MEM"
-  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){print $1"/"$2"|"$3"|"$4}}'; done | sort
+  for POD in ${PODS}; do echo "${RESOURCES}" | awk -v pod=${POD} '{if($2 == pod){printf "%s|%dm|%dMi\n",$1"/"$2,$3,$4}}'; done | sort
 }
 
 #### MAIN
@@ -72,7 +72,7 @@ then
   esac
 fi
 
-RESOURCES=$(${OC} adm top pod -A ${LOGLEVEL})
+RESOURCES=$(${OC} ${LOGLEVEL} get --raw "/apis/metrics.k8s.io/v1beta1/pods" ${LOGLEVEL} | jq -r '.items[] | "\(.metadata | "\(.namespace) \(.name)") \([.containers[].usage.cpu | gsub("m";"") | tonumber] | add) \([.containers[].usage.memory | if(contains("Mi")) then (gsub("Mi";"") | tonumber | . * 1024) elif (contains("Gi")) then (gsub("Gi";"") | tonumber | . * 1024 * 1024) else (gsub("Ki";"") | tonumber) end] | add | . / 1024)"')
 for NODE in ${NODES}
 do
   echo -e "\n===== ${NODE} ====="
