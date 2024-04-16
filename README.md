@@ -22,10 +22,10 @@ ocadmtop_node.sh - Version:  X.Y
 
 ## Examples
 
-* Displaying ALL nodes (default) sorted by CPU (default)
+* Displaying ALL nodes (default) sorted by CPU (default) with a timeout set to 2 minutes.
 
 ```bash
-./ocadmtop_node.sh
+./ocadmtop_node.sh -t 2m
 ```
 
 * Displaying all master nodes sorted by MEM
