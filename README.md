@@ -8,6 +8,7 @@ This script will collect the PODs' resources consumption and display them by nod
 ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...] [-d {0-10}] [-t <TIMEOUT>][-v|-h]
   -c: sort by CPU (default)
   -m: sort by Memory
+  -n: filter on a specific namespace PODs
   -p: sort by namespace/pod
   -L: retrieve node(s) matching all labels
   -H: retrieve node(s) by hostname
@@ -44,4 +45,10 @@ ocadmtop_node.sh - Version:  X.Y
 
 ```bash
 ./ocadmtop_node.sh -H master-1.lab.example.com -d 6
+```
+
+* Displaying a specific namespace by MEM on all nodes
+
+```bash
+./ocadmtop_node.sh -n openshift-monitoring -m
 ```
