@@ -3,7 +3,7 @@
 # Owner       # Red Hat - CEE
 # Name        # ocadmtop_node.sh
 # Description # Script to display detailed POD CPU/MEM usage on node
-# @VERSION    # 0.6
+# @VERSION    # 0.6.1
 ########################################################################
 
 #### Functions
@@ -38,7 +38,7 @@ fct_cpu() {
   do
     NAMESPACE=$(echo ${POD_DETAILS} | cut -d'/' -f1)
     POD=$(echo ${POD_DETAILS} | cut -d'/' -f2)
-    echo "${RESOURCES}" | awk -v pod=${POD} -v namespace=${NAMESPACE} '{if(($1 == namespace) && ($2 == pod)){printf "%dm|%dMi|%s\n",$3,$4,$1"/"$2}}'
+    echo "${RESOURCES}" | awk -v pod_name=${POD} -v namespace_name=${NAMESPACE} '{if(($1 == namespace_name) && ($2 == pod_name)){printf "%dm|%dMi|%s\n",$3,$4,$1"/"$2}}'
   done | sort -rn
 }
 
@@ -48,7 +48,7 @@ fct_mem() {
   do
     NAMESPACE=$(echo ${POD_DETAILS} | cut -d'/' -f1)
     POD=$(echo ${POD_DETAILS} | cut -d'/' -f2)
-    echo "${RESOURCES}" | awk -v pod=${POD} -v namespace=${NAMESPACE} '{if(($1 == namespace) && ($2 == pod)){printf "%dMi|%dm|%s\n",$4,$3,$1"/"$2}}'
+    echo "${RESOURCES}" | awk -v pod_name=${POD} -v namespace_name=${NAMESPACE} '{if(($1 == namespace_name) && ($2 == pod_name)){printf "%dMi|%dm|%s\n",$4,$3,$1"/"$2}}'
   done | sort -rn
 }
 
@@ -58,7 +58,7 @@ fct_pod() {
   do
     NAMESPACE=$(echo ${POD_DETAILS} | cut -d'/' -f1)
     POD=$(echo ${POD_DETAILS} | cut -d'/' -f2)
-    echo "${RESOURCES}" | awk -v pod=${POD} -v namespace=${NAMESPACE} '{if(($1 == namespace) && ($2 == pod)){printf "%s|%dm|%dMi\n",$1"/"$2,$3,$4}}'
+    echo "${RESOURCES}" | awk -v pod_name=${POD} -v namespace_name=${NAMESPACE} '{if(($1 == namespace_name) && ($2 == pod_name)){printf "%s|%dm|%dMi\n",$1"/"$2,$3,$4}}'
   done | sort
 }
 
@@ -104,7 +104,7 @@ fi
 if [[ ! -z ${NAMESPACE} ]]
 then
   RESOURCES=$(${OC} ${LOGLEVEL} get --raw "/apis/metrics.k8s.io/v1beta1/namespaces/${NAMESPACE}/pods" ${LOGLEVEL} | jq -r '.items[] | "\(.metadata | "\(.namespace) \(.name)") \([.containers[].usage.cpu | gsub("m";"") | tonumber] | add) \([.containers[].usage.memory | if(contains("Mi")) then (gsub("Mi";"") | tonumber | . * 1024) elif (contains("Gi")) then (gsub("Gi";"") | tonumber | . * 1024 * 1024) else (gsub("Ki";"") | tonumber) end] | add | . / 1024)"')
-  ALL_FILTERED_PODS=$(${OC} ${LOGLEVEL} get pod -A -o wide | awk -v namespace=${NAMESPACE} '{if(($4 != "Completed")&&($1 == namespace)){print $1"/"$2" "$(NF-2)}}')
+  ALL_FILTERED_PODS=$(${OC} ${LOGLEVEL} get pod -A -o wide | awk -v namespace_name=${NAMESPACE} '{if(($4 != "Completed")&&($1 == namespace_name)){print $1"/"$2" "$(NF-2)}}')
 else
   RESOURCES=$(${OC} ${LOGLEVEL} get --raw "/apis/metrics.k8s.io/v1beta1/pods" ${LOGLEVEL} | jq -r '.items[] | "\(.metadata | "\(.namespace) \(.name)") \([.containers[].usage.cpu | gsub("m";"") | tonumber] | add) \([.containers[].usage.memory | if(contains("Mi")) then (gsub("Mi";"") | tonumber | . * 1024) elif (contains("Gi")) then (gsub("Gi";"") | tonumber | . * 1024 * 1024) else (gsub("Ki";"") | tonumber) end] | add | . / 1024)"')
   ALL_FILTERED_PODS=$(${OC} ${LOGLEVEL} get pod -A -o wide | awk '{if($4 != "Completed"){print $1"/"$2" "$(NF-2)}}')
