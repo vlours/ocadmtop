@@ -13,6 +13,7 @@ ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...]
   -L: retrieve node(s) matching all labels
   -H: retrieve node(s) by hostname
   -A: retrieve All nodes (default)
+  -C: Display the container details (default: false)
   -d: debug/loglevel mode. Provide additional 'oc --loglevel' ouput. (Recommended value: 6)
   -t: The length of time to wait before giving up on a single server request. Non-zero values should contain a
       corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests.
@@ -51,4 +52,9 @@ ocadmtop_node.sh - Version:  X.Y
 
 ```bash
 ./ocadmtop_node.sh -n openshift-monitoring -m
+```
+
+* Displaying the worker nodes PODS and containers sorted by CPU
+```
+./ocadmtop_node.sh -c -L node-role.kubernetes.io/worker= -C
 ```
