@@ -5,21 +5,22 @@ This script will collect the PODs' resources consumption and display them by nod
 ## Usage
 
 ```bash
-ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...] [-d {0-10}] [-t <TIMEOUT>][-v|-h]
-  -c: sort by CPU (default)
-  -m: sort by Memory
-  -n: filter on a specific namespace PODs
-  -p: sort by namespace/pod
-  -L: retrieve node(s) matching all labels
-  -H: retrieve node(s) by hostname
-  -A: retrieve All nodes (default)
+ocadmtop_node.sh [-c|-m|-p] [-A|-L <label1>,<label2>,...|-H <host1>,<host2>,...] [-l] [-d {0-10}] [-t <TIMEOUT>][-v|-h]
+  -c: Sort by CPU (default)
+  -l: Display the PODs in a full list (not grouped nodeName)
+  -m: Sort by Memory
+  -n: Filter on a specific namespace PODs
+  -p: Sort by namespace/pod
+  -L: Retrieve node(s) matching all labels
+  -H: Retrieve node(s) by hostname
+  -A: Retrieve All nodes (default)
   -C: Display the container details (default: false)
-  -d: debug/loglevel mode. Provide additional 'oc --loglevel' ouput. (Recommended value: 6)
+  -d: Debug/loglevel mode. Provide additional 'oc --loglevel' ouput. (Recommended value: 6)
   -t: The length of time to wait before giving up on a single server request. Non-zero values should contain a
       corresponding time unit (e.g. 1s, 2m, 3h). A value of zero means don't timeout requests.
   -v: Display the version
   -h: Display this help
-ocadmtop_node.sh - Version:  X.Y
+ocadmtop_node.sh - Version:  X.Y.Z
 ```
 
 ## Examples
@@ -55,6 +56,13 @@ ocadmtop_node.sh - Version:  X.Y
 ```
 
 * Displaying the worker nodes PODS and containers sorted by CPU
-```
+
+```bash
 ./ocadmtop_node.sh -c -L node-role.kubernetes.io/worker= -C
+```
+
+* Displaying all worker nodes as list (not group by nodes)
+
+```bash
+./ocadmtop_node.sh -L node-role.kubernetes.io/worker -l
 ```
